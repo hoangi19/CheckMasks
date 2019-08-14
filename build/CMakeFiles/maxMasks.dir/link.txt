@@ -1,0 +1,3 @@
+G:\Cmake\bin\cmake.exe -E remove -f CMakeFiles\maxMasks.dir/objects.a
+G:\Code\MinGW64\mingw64\bin\ar.exe cr CMakeFiles\maxMasks.dir/objects.a @CMakeFiles\maxMasks.dir\objects1.rsp
+G:\Code\MinGW64\mingw64\bin\g++.exe -g   -Wl,--whole-archive CMakeFiles\maxMasks.dir/objects.a -Wl,--no-whole-archive  -o maxMasks.exe -Wl,--out-implib,libmaxMasks.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\maxMasks.dir\linklibs.rsp

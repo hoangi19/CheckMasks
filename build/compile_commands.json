@@ -1,0 +1,7 @@
+[
+{
+  "directory": "C:/Users/Hoangi19/Desktop/MyDCMTK/checkMasks/build",
+  "command": "G:\\Code\\MinGW64\\mingw64\\bin\\g++.exe   @CMakeFiles/checkMasks.dir/includes_CXX.rsp -g   -o CMakeFiles\\checkMasks.dir\\main.cpp.obj -c C:\\Users\\Hoangi19\\Desktop\\MyDCMTK\\checkMasks\\main.cpp",
+  "file": "C:/Users/Hoangi19/Desktop/MyDCMTK/checkMasks/main.cpp"
+}
+]

@@ -1,0 +1,3 @@
+C:/Users/Hoangi19/Desktop/MyDCMTK/checkMasks/build/CMakeFiles/edit_cache.dir
+C:/Users/Hoangi19/Desktop/MyDCMTK/checkMasks/build/CMakeFiles/checkMasks.dir
+C:/Users/Hoangi19/Desktop/MyDCMTK/checkMasks/build/CMakeFiles/rebuild_cache.dir

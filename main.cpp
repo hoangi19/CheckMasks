@@ -1,0 +1,271 @@
+#include "opencv2/core/core.hpp"
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+
+#include <dirent.h>
+#include <iostream>
+#include <queue>
+#include <string>
+
+int BFS(int masks[], cv::Mat curImage, int x, int y, int &n){
+    if ((int)curImage.at<uchar>(x, y) == 0) return 0;
+    int rows = curImage.rows;
+    int cols = curImage.cols;
+
+    if (masks[x*rows + y] != 0) return 0;
+    std::queue<int> q;
+    ++n;
+    
+    
+    q.push(x*rows + y);
+    int *visited = new int[rows*cols];
+    memset(visited, 0, sizeof(visited));
+
+    masks[x*rows + y] = n;
+
+    while (!q.empty())
+    {
+        int u = q.front();
+        
+        q.pop();
+        if (visited[u]) continue;
+        masks[u] = n;
+        visited[u] = 1;
+        
+        if (u%rows + 1 < cols)
+            if ((int)curImage.at<uchar>(u/rows, u%rows + 1) != 0 && visited[u+1] == 0) q.push(u+1);
+        if (u%rows > 0)
+            if ((int)curImage.at<uchar>(u/rows, u%rows - 1) != 0 && visited[u-1] == 0) q.push(u-1);
+        if (u+rows < rows*cols)
+            if ((int)curImage.at<uchar>(u/rows + 1, u%rows) != 0 && visited[u+rows] == 0) q.push(u+rows);
+        if (u/rows > 0)
+            if ((int)curImage.at<uchar>(u/rows - 1, u%rows) != 0 && visited[u-rows] == 0) q.push(u-rows);
+    }
+    delete(visited);
+
+    return 1;
+}
+
+int checkMask(cv::Mat preImage, cv::Mat &curImage, cv::Mat befImage){
+    
+    int rows = curImage.rows;
+    int cols = curImage.cols;
+    
+    int *masksP = new int[rows*cols];
+    int *masksC = new int[rows*cols];
+    int *masksB = new int[rows*cols];
+    for (int i = 0; i < rows*cols; i++)
+    {
+        masksB[i] = 0;
+        masksC[i] = 0;
+        masksP[i] = 0;
+    }
+    int nCMask = 0;
+    int nBMask = 0;
+    int nPMask = 0;
+    for (int r = 0; r < rows; r++)
+        for (int c = 0; c < cols; c++){
+            // if ((int)curImage.at<uchar>(r, c) != 0 && ((int)preImage.at<uchar>(r, c) != 0 || (int)befImage.at<uchar>(r, c) != 0))
+            {
+                BFS(masksP, preImage, r, c, nPMask);
+                BFS(masksC, curImage, r, c, nCMask);
+                BFS(masksB, befImage, r, c, nBMask);
+            }
+        }
+    
+    int *SMasksP = new int[rows*cols];
+    int *SMasksB = new int[rows*cols];
+    int *SCMasks = new int[rows*cols];
+    int *SBMasks = new int[rows*cols];
+    int *SPMasks = new int[rows*cols];
+    for (int i = 0; i < rows*cols; i++){
+        SMasksB[i] = 0;
+        SMasksP[i] = 0;
+        SCMasks[i] = 0;
+        SBMasks[i] = 0;
+        SPMasks[i] = 0;
+    }
+    int idSCMax = 0;
+    int idSBMax = 0;
+    int idSPMax = 0;
+
+    for (int r = 0; r < rows; ++r)
+        for (int c = 0; c < cols; ++c){
+
+            if (masksC[r*rows + c] != 0) SCMasks[masksC[r*rows+c]]++;
+            if (SCMasks[idSCMax] < SCMasks[masksC[r*rows + c]]) idSCMax = masksC[r*rows + c];
+
+            if (masksB[r*rows + c] != 0) SBMasks[masksB[r*rows+c]]++;
+            if (SBMasks[idSBMax] < SBMasks[masksB[r*rows + c]]) idSBMax = masksB[r*rows + c];
+
+            if (masksP[r*rows + c] != 0) SPMasks[masksP[r*rows+c]]++;
+            if (SPMasks[idSPMax] < SPMasks[masksP[r*rows + c]]) idSPMax = masksP[r*rows + c];
+            
+        }
+    // std::cout << idSPMax << " " << idSCMax << " " << idSBMax << " ";
+    for (int r = 0; r < rows; ++r)
+        for (int c = 0; c < cols; ++c){
+            if (masksC[r*rows + c] != 0 && masksC[r*rows + c] == idSCMax){
+                // curImage.at<uchar>(r, c) = 0;
+                if (masksB[r*rows + c] != 0 && masksB[r*rows + c] == idSBMax) SMasksB[masksB[r*rows + c]]++;
+                if (masksP[r*rows + c] != 0 && masksP[r*rows + c] == idSPMax) SMasksP[masksP[r*rows + c]]++;
+                
+            }
+        }
+    int *dd = new int[rows*cols];
+    for (int r = 0; r < rows; ++r)
+        for (int c  = 0; c < cols; ++c)
+            dd[r*rows + c] = 0;
+    for (int r = 0; r < rows; ++r)
+        for (int c = 0; c < cols; ++c){
+            if (dd[masksC[r*rows+c]] == 1) continue;
+            if (curImage.at<uchar>(r, c) != 0)
+                if ( masksC[r*rows + c] == 0 || masksC[r*rows + c] != idSCMax) curImage.at<uchar>(r, c) = 0;
+                    else {
+                        int s = SCMasks[masksC[r*rows + c]];
+                        int sB = SMasksB[masksC[r*rows + c]];
+                        int sP = SMasksP[masksC[r*rows + c]];
+                        if (masksB[r*rows + c] != idSBMax) {curImage.at<uchar>(r, c) = 0; continue;}
+                        if (masksP[r*rows + c] != idSPMax) {curImage.at<uchar>(r, c) = 0; continue;}
+                        // std::cout << "s : " << s << " sB : " << sB << " sP : " << sP << "\n";
+                        if (sB * 10.0 >= s*6.0 || sP * 10.0 >= s*6.0) {
+                            dd[masksC[r*rows+c]] = 1;
+                            continue;
+                        }
+                        curImage.at<uchar>(r, c) = 0;
+                    }
+
+        }
+    delete(dd);
+    delete(masksB);
+    delete(masksC);
+    delete(masksP);
+    delete(SMasksP);
+    delete(SMasksB);
+    delete(SCMasks);
+    delete(SBMasks);
+    delete(SPMasks);
+    return 1;
+}
+
+int checkImage(cv::Mat image){
+    for (int r = 0; r < image.rows; r++)
+        for (int c = 0; c < image.cols; c++)
+            if ((int)image.at<uchar>(r, c) != 0) return 0;
+    return 1;
+}
+
+int loadName(std::vector<std::string> &listName, std::string path){
+    DIR *dr;
+    dr = opendir(path.c_str());
+    struct dirent *de;
+    while ((de = readdir(dr)) != NULL)
+    {
+        std::string deName = de->d_name;
+        if (deName == "." || deName == "..") continue;
+        listName.push_back(deName);
+    }
+    delete(de);
+    closedir(dr);
+    return 0;
+}
+
+int loadMasks(std::string inpath, std::string outpath){
+    DIR *dip;
+    if ( (dip = opendir(inpath.c_str())) == NULL) return printf("Folder %s not found!", inpath), 1;
+    struct dirent *de;
+    while ((de = readdir(dip)) != NULL)
+    {
+        std::string dename = de->d_name;
+       
+        if (dename == "." || dename == "..") continue;
+        std::vector<std::string> listName;
+        std::string path = inpath + "/" + de->d_name + "/";
+
+        loadName(listName, path);
+        // create folder if not exist
+        std::string outP = outpath + "/" + de->d_name + "/";
+        DIR *dircheck;
+        dircheck = opendir(outP.c_str());
+        if (dircheck == NULL){
+            std::string cmd = "mkdir \"" + outP + "\"";
+            system(cmd.c_str());
+        }
+        
+        cv::Mat firstImage = cv::imread(path + listName[0], 0);
+        bool check = true;
+        while(checkImage(firstImage) && !listName.empty()){
+            listName.erase(listName.begin());
+            firstImage = cv::imread(path + listName[0], 0);
+        }
+        if (!listName.empty()) checkMask(firstImage, firstImage, cv::imread(path + listName[1], 0));
+        
+        if(checkImage(firstImage)){
+            listName[0] = listName[1];
+            check = false;
+        }
+        
+        bool flag = true;
+        if (check){
+            flag = cv::imwrite(outP + listName[0], firstImage);
+            if (flag) std::cout << "Done! :";
+                else std::cout << "Error! :";
+            std::cout << outP + listName[0] << "\n";
+        }
+        for (int i = 1; i < listName.size()-1; i++){
+            cv::Mat preImage = cv::imread(path + listName[i-1], 0);
+            cv::Mat curImage = cv::imread(path + listName[i], 0);
+            cv::Mat befImage = cv::imread(path + listName[i+1], 0);
+            if (checkImage(curImage)){
+                listName[i] = listName[i-1];
+                continue;
+            }
+            checkMask(preImage, curImage, befImage);
+            
+            if (checkImage(curImage)){
+                listName[i] = listName[i-1];
+                continue;
+            }
+            bool flag = cv::imwrite(outP + listName[i], curImage);
+            if (flag) std::cout << "Done! :";
+                else std::cout << "Error! :";
+            std::cout << outP + listName[i] << "\n";
+        }
+
+        cv::Mat lastImage = cv::imread(path + listName[listName.size()-1], 0);
+        if (checkImage(lastImage)) continue;
+        checkMask(cv::imread(path + listName[listName.size()-2], 0), lastImage, lastImage);
+        if (checkImage(lastImage)) continue;
+        flag = cv::imwrite(outP + listName[listName.size()-1], lastImage);
+        if (flag) std::cout << "Done! :";
+            else std::cout << "Error! :";
+        std::cout << outP + listName[listName.size()-1] << "\n";
+    }
+    delete(de);
+    closedir(dip);
+
+    
+    return 0;
+}
+
+int main(int argc, char const *argv[])
+{
+    std::string inpath, outpath;
+    inpath = argv[1];
+    outpath = argv[2];
+
+    DIR *dircheck;
+    dircheck = opendir(outpath.c_str());
+    if (dircheck == NULL){
+        std::string cmd = "mkdir \"" + outpath + "\"";
+        system(cmd.c_str());
+    }
+
+    // std::cout << "input path : ";
+    // std::cin >> inpath;
+    // std::cout << "output path : ";
+    // std::cin >> outpath;
+    // std::cin >> path;
+    if (loadMasks(inpath, outpath)) return 1;
+    return 0;
+}
