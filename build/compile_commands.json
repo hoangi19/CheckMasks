@@ -1,7 +1,12 @@
 [
 {
   "directory": "C:/Users/Hoangi19/Desktop/MyDCMTK/checkMasks/build",
-  "command": "G:\\Code\\MinGW64\\mingw64\\bin\\g++.exe   @CMakeFiles/checkMasks.dir/includes_CXX.rsp -g   -o CMakeFiles\\checkMasks.dir\\main.cpp.obj -c C:\\Users\\Hoangi19\\Desktop\\MyDCMTK\\checkMasks\\main.cpp",
-  "file": "C:/Users/Hoangi19/Desktop/MyDCMTK/checkMasks/main.cpp"
+  "command": "G:\\Code\\MinGW64\\mingw64\\bin\\g++.exe   @CMakeFiles/checkMasks.dir/includes_CXX.rsp -g   -o CMakeFiles\\checkMasks.dir\\checkMasks.cpp.obj -c C:\\Users\\Hoangi19\\Desktop\\MyDCMTK\\checkMasks\\checkMasks.cpp",
+  "file": "C:/Users/Hoangi19/Desktop/MyDCMTK/checkMasks/checkMasks.cpp"
+},
+{
+  "directory": "C:/Users/Hoangi19/Desktop/MyDCMTK/checkMasks/build",
+  "command": "G:\\Code\\MinGW64\\mingw64\\bin\\g++.exe   @CMakeFiles/maxMasks.dir/includes_CXX.rsp -g   -o CMakeFiles\\maxMasks.dir\\maxMasks.cpp.obj -c C:\\Users\\Hoangi19\\Desktop\\MyDCMTK\\checkMasks\\maxMasks.cpp",
+  "file": "C:/Users/Hoangi19/Desktop/MyDCMTK/checkMasks/maxMasks.cpp"
 }
 ]

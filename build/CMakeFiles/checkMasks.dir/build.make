@@ -56,28 +56,28 @@ include CMakeFiles/checkMasks.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/checkMasks.dir/flags.make
 
-CMakeFiles/checkMasks.dir/main.cpp.obj: CMakeFiles/checkMasks.dir/flags.make
-CMakeFiles/checkMasks.dir/main.cpp.obj: CMakeFiles/checkMasks.dir/includes_CXX.rsp
-CMakeFiles/checkMasks.dir/main.cpp.obj: ../main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\Hoangi19\Desktop\MyDCMTK\checkMasks\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/checkMasks.dir/main.cpp.obj"
-	G:\Code\MinGW64\mingw64\bin\g++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\checkMasks.dir\main.cpp.obj -c C:\Users\Hoangi19\Desktop\MyDCMTK\checkMasks\main.cpp
+CMakeFiles/checkMasks.dir/checkMasks.cpp.obj: CMakeFiles/checkMasks.dir/flags.make
+CMakeFiles/checkMasks.dir/checkMasks.cpp.obj: CMakeFiles/checkMasks.dir/includes_CXX.rsp
+CMakeFiles/checkMasks.dir/checkMasks.cpp.obj: ../checkMasks.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\Hoangi19\Desktop\MyDCMTK\checkMasks\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/checkMasks.dir/checkMasks.cpp.obj"
+	G:\Code\MinGW64\mingw64\bin\g++.exe  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles\checkMasks.dir\checkMasks.cpp.obj -c C:\Users\Hoangi19\Desktop\MyDCMTK\checkMasks\checkMasks.cpp
 
-CMakeFiles/checkMasks.dir/main.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/checkMasks.dir/main.cpp.i"
-	G:\Code\MinGW64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Hoangi19\Desktop\MyDCMTK\checkMasks\main.cpp > CMakeFiles\checkMasks.dir\main.cpp.i
+CMakeFiles/checkMasks.dir/checkMasks.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/checkMasks.dir/checkMasks.cpp.i"
+	G:\Code\MinGW64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\Hoangi19\Desktop\MyDCMTK\checkMasks\checkMasks.cpp > CMakeFiles\checkMasks.dir\checkMasks.cpp.i
 
-CMakeFiles/checkMasks.dir/main.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/checkMasks.dir/main.cpp.s"
-	G:\Code\MinGW64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Hoangi19\Desktop\MyDCMTK\checkMasks\main.cpp -o CMakeFiles\checkMasks.dir\main.cpp.s
+CMakeFiles/checkMasks.dir/checkMasks.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/checkMasks.dir/checkMasks.cpp.s"
+	G:\Code\MinGW64\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\Hoangi19\Desktop\MyDCMTK\checkMasks\checkMasks.cpp -o CMakeFiles\checkMasks.dir\checkMasks.cpp.s
 
 # Object files for target checkMasks
 checkMasks_OBJECTS = \
-"CMakeFiles/checkMasks.dir/main.cpp.obj"
+"CMakeFiles/checkMasks.dir/checkMasks.cpp.obj"
 
 # External object files for target checkMasks
 checkMasks_EXTERNAL_OBJECTS =
 
-checkMasks.exe: CMakeFiles/checkMasks.dir/main.cpp.obj
+checkMasks.exe: CMakeFiles/checkMasks.dir/checkMasks.cpp.obj
 checkMasks.exe: CMakeFiles/checkMasks.dir/build.make
 checkMasks.exe: G:/Code/DCMTKPACKAGE/DCMTK/lib/libofstd.a
 checkMasks.exe: G:/Code/DCMTKPACKAGE/DCMTK/lib/liboflog.a

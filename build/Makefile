@@ -122,32 +122,72 @@ checkMasks/fast:
 	$(MAKE) -f CMakeFiles\checkMasks.dir\build.make CMakeFiles/checkMasks.dir/build
 .PHONY : checkMasks/fast
 
-main.obj: main.cpp.obj
+#=============================================================================
+# Target rules for targets named maxMasks
 
-.PHONY : main.obj
+# Build rule for target.
+maxMasks: cmake_check_build_system
+	$(MAKE) -f CMakeFiles\Makefile2 maxMasks
+.PHONY : maxMasks
+
+# fast build rule for target.
+maxMasks/fast:
+	$(MAKE) -f CMakeFiles\maxMasks.dir\build.make CMakeFiles/maxMasks.dir/build
+.PHONY : maxMasks/fast
+
+checkMasks.obj: checkMasks.cpp.obj
+
+.PHONY : checkMasks.obj
 
 # target to build an object file
-main.cpp.obj:
-	$(MAKE) -f CMakeFiles\checkMasks.dir\build.make CMakeFiles/checkMasks.dir/main.cpp.obj
-.PHONY : main.cpp.obj
+checkMasks.cpp.obj:
+	$(MAKE) -f CMakeFiles\checkMasks.dir\build.make CMakeFiles/checkMasks.dir/checkMasks.cpp.obj
+.PHONY : checkMasks.cpp.obj
 
-main.i: main.cpp.i
+checkMasks.i: checkMasks.cpp.i
 
-.PHONY : main.i
+.PHONY : checkMasks.i
 
 # target to preprocess a source file
-main.cpp.i:
-	$(MAKE) -f CMakeFiles\checkMasks.dir\build.make CMakeFiles/checkMasks.dir/main.cpp.i
-.PHONY : main.cpp.i
+checkMasks.cpp.i:
+	$(MAKE) -f CMakeFiles\checkMasks.dir\build.make CMakeFiles/checkMasks.dir/checkMasks.cpp.i
+.PHONY : checkMasks.cpp.i
 
-main.s: main.cpp.s
+checkMasks.s: checkMasks.cpp.s
 
-.PHONY : main.s
+.PHONY : checkMasks.s
 
 # target to generate assembly for a file
-main.cpp.s:
-	$(MAKE) -f CMakeFiles\checkMasks.dir\build.make CMakeFiles/checkMasks.dir/main.cpp.s
-.PHONY : main.cpp.s
+checkMasks.cpp.s:
+	$(MAKE) -f CMakeFiles\checkMasks.dir\build.make CMakeFiles/checkMasks.dir/checkMasks.cpp.s
+.PHONY : checkMasks.cpp.s
+
+maxMasks.obj: maxMasks.cpp.obj
+
+.PHONY : maxMasks.obj
+
+# target to build an object file
+maxMasks.cpp.obj:
+	$(MAKE) -f CMakeFiles\maxMasks.dir\build.make CMakeFiles/maxMasks.dir/maxMasks.cpp.obj
+.PHONY : maxMasks.cpp.obj
+
+maxMasks.i: maxMasks.cpp.i
+
+.PHONY : maxMasks.i
+
+# target to preprocess a source file
+maxMasks.cpp.i:
+	$(MAKE) -f CMakeFiles\maxMasks.dir\build.make CMakeFiles/maxMasks.dir/maxMasks.cpp.i
+.PHONY : maxMasks.cpp.i
+
+maxMasks.s: maxMasks.cpp.s
+
+.PHONY : maxMasks.s
+
+# target to generate assembly for a file
+maxMasks.cpp.s:
+	$(MAKE) -f CMakeFiles\maxMasks.dir\build.make CMakeFiles/maxMasks.dir/maxMasks.cpp.s
+.PHONY : maxMasks.cpp.s
 
 # Help Target
 help:
@@ -157,10 +197,14 @@ help:
 	@echo ... depend
 	@echo ... edit_cache
 	@echo ... checkMasks
+	@echo ... maxMasks
 	@echo ... rebuild_cache
-	@echo ... main.obj
-	@echo ... main.i
-	@echo ... main.s
+	@echo ... checkMasks.obj
+	@echo ... checkMasks.i
+	@echo ... checkMasks.s
+	@echo ... maxMasks.obj
+	@echo ... maxMasks.i
+	@echo ... maxMasks.s
 .PHONY : help
 
 

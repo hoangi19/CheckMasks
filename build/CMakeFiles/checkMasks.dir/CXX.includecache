@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-C:/Users/Hoangi19/Desktop/MyDCMTK/checkMasks/main.cpp
+C:/Users/Hoangi19/Desktop/MyDCMTK/checkMasks/checkMasks.cpp
 opencv2/core/core.hpp
 C:/Users/Hoangi19/Desktop/MyDCMTK/checkMasks/opencv2/core/core.hpp
 opencv2/highgui/highgui.hpp

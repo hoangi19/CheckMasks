@@ -1,5 +1,5 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/checkMasks.dir/main.cpp.obj"
+  "CMakeFiles/checkMasks.dir/checkMasks.cpp.obj"
   "checkMasks.pdb"
   "checkMasks.exe"
   "checkMasks.exe.manifest"

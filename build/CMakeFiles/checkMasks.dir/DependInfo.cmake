@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "C:/Users/Hoangi19/Desktop/MyDCMTK/checkMasks/main.cpp" "C:/Users/Hoangi19/Desktop/MyDCMTK/checkMasks/build/CMakeFiles/checkMasks.dir/main.cpp.obj"
+  "C:/Users/Hoangi19/Desktop/MyDCMTK/checkMasks/checkMasks.cpp" "C:/Users/Hoangi19/Desktop/MyDCMTK/checkMasks/build/CMakeFiles/checkMasks.dir/checkMasks.cpp.obj"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

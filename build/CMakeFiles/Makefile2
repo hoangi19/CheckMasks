@@ -101,6 +101,43 @@ clean: CMakeFiles/checkMasks.dir/clean
 .PHONY : clean
 
 #=============================================================================
+# Target rules for target CMakeFiles/maxMasks.dir
+
+# All Build rule for target.
+CMakeFiles/maxMasks.dir/all:
+	$(MAKE) -f CMakeFiles\maxMasks.dir\build.make CMakeFiles/maxMasks.dir/depend
+	$(MAKE) -f CMakeFiles\maxMasks.dir\build.make CMakeFiles/maxMasks.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=C:\Users\Hoangi19\Desktop\MyDCMTK\checkMasks\build\CMakeFiles --progress-num=3,4 "Built target maxMasks"
+.PHONY : CMakeFiles/maxMasks.dir/all
+
+# Include target in all.
+all: CMakeFiles/maxMasks.dir/all
+
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/maxMasks.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\Hoangi19\Desktop\MyDCMTK\checkMasks\build\CMakeFiles 2
+	$(MAKE) -f CMakeFiles\Makefile2 CMakeFiles/maxMasks.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\Hoangi19\Desktop\MyDCMTK\checkMasks\build\CMakeFiles 0
+.PHONY : CMakeFiles/maxMasks.dir/rule
+
+# Convenience name for target.
+maxMasks: CMakeFiles/maxMasks.dir/rule
+
+.PHONY : maxMasks
+
+# clean rule for target.
+CMakeFiles/maxMasks.dir/clean:
+	$(MAKE) -f CMakeFiles\maxMasks.dir\build.make CMakeFiles/maxMasks.dir/clean
+.PHONY : CMakeFiles/maxMasks.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/maxMasks.dir/clean
+
+.PHONY : clean
+
+#=============================================================================
 # Special targets to cleanup operation of make.
 
 # Special rule to run CMake to check the build system integrity.
