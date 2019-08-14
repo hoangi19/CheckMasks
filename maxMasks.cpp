@@ -149,8 +149,8 @@ int loadMasks(std::string inpath, std::string outpath){
 
 int main(int argc, char const *argv[])
 {
-    std::string input = "../testr1";
-    std::string output = "../testr2";
+    std::string input = argv[1];
+    std::string output = argv[2];
     loadMasks(input, output);
     return 0;
 }
