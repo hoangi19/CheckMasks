@@ -2,6 +2,7 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 
+#include <fstream>
 #include <dirent.h>
 #include <iostream>
 #include <queue>
@@ -10,6 +11,7 @@
 int loadName(std::vector<std::string> &listName, std::string path){
     DIR *dr;
     dr = opendir(path.c_str());
+    if (dr == NULL) return 1;
     struct dirent *de;
     while ((de = readdir(dr)) != NULL)
     {
@@ -59,10 +61,12 @@ int writeImage(std::string name, std::string outP, std::string path){
     if (flag) std::cout << "Done! :";
         else std::cout << "Error! :";
     std::cout << outP + name << "\n";
+
     return 1;
 }
 
 int loadMasks(std::string inpath, std::string outpath){
+    std::string arr[] = {"bladder", "prostate", "left femur", "rectum", "right femur"};
     DIR *dip;
     if ( (dip = opendir(inpath.c_str())) == NULL) return printf("Folder %s not found!", inpath), 1;
     struct dirent *de;
@@ -72,11 +76,14 @@ int loadMasks(std::string inpath, std::string outpath){
        
         if (dename == "." || dename == "..") continue;
         std::vector<std::string> listName;
-        std::string path = inpath + "/" + de->d_name + "/";
+        std::string rpath = inpath + "/" + de->d_name + "/";
+        for (int i = 0; i < 5; ++i)
+        {
+        std::string path = rpath + arr[i] + "/predict_pos/";
 
-        loadName(listName, path);
+        if (loadName(listName, path)) continue;
         // create folder if not exist
-        std::string outP = outpath + "/" + de->d_name + "/";
+        std::string outP = outpath + "/" + de->d_name + "/" + arr[i] + "/predict_pos/";
         if (listName.size() == 0){
             std::cout << path << " is empty!";
         }
@@ -87,7 +94,7 @@ int loadMasks(std::string inpath, std::string outpath){
         getSMasks(listName, path, SMasks);
         float k = 0.2;
         float sMin = SMasks[0].first * k;
-        // std::cout << "Max Size : " << SMasks[0].first << "\n";
+        std::cout << "Max Size : " << SMasks[0].first << "\n";
         std::vector<std::string> outName;
         // writeImage(listName[SMasks[0].second], outP, path);
         outName.push_back(listName[SMasks[0].second]);
@@ -119,27 +126,35 @@ int loadMasks(std::string inpath, std::string outpath){
                 break;
             }
             if (outNameInt[m].first > idmax.first) r = m;
-                else l = m;
+                else r = m;
         }
+        int ansl = l, ansr = r;
         r = l + 1;
         --l;
-        writeImage(outName[idmax.second], outP, path);
+        // writeImage(outName[idmax.second], outP, path);
         // std::cout << "size : " << outName.size() << "\n";
+        
         while (true)
         {
             // std::cout << "l : " << l << " " << " r : " << r << "\n";
             if (l >= 0) 
-                if (outNameInt[l].first + 5 > outNameInt[l+1].first) writeImage(outName[outNameInt[l].second], outP, path);
-                    else l = -1;
+                if (outNameInt[l].first + 5 > outNameInt[l+1].first)  ansl = l; // writeImage(outName[outNameInt[l].second], outP, path);
+                    else  l = -1;
             if (r < outName.size())
-                if (outNameInt[r].first - 5 < outNameInt[r-1].first) writeImage(outName[outNameInt[r].second], outP, path);
+                if (outNameInt[r].first - 5 < outNameInt[r-1].first) ansr = r; // writeImage(outName[outNameInt[r].second], outP, path);
                     else r = outName.size();
             if (l < 0 && r >= outName.size()) break;
             --l; ++r;
         }
+        std::cout << ansl << " " << ansr << "\n";
+        std::ofstream outfile;
+        outfile.open("test.txt", std::ios_base::app);
         
+        outfile << de->d_name << " " << arr[i] << " " << outNameInt[ansl].second << " " << outNameInt[ansr].second << "\n";
+        outfile.close();
         // delete(&outNameInt);
         // delete(SMasks);
+        }
     }
     delete(de);
     closedir(dip);
