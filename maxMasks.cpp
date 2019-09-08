@@ -67,7 +67,7 @@ int writeImage(std::string name, std::string outP, std::string path){
     return 1;
 }
 
-int loadMasks(std::string inpath, std::string outpath){
+int loadMasks(std::string inpath, std::string outpath, std::string outputImage){
     std::string arr[] = {"left femur", "bladder", "prostate" , "rectum", "right femur"};
     DIR *dip;
     if ( (dip = opendir(inpath.c_str())) == NULL) return printf("Folder %s not found!", inpath), 1;
@@ -100,11 +100,13 @@ int loadMasks(std::string inpath, std::string outpath){
                 // delete(drxxxx);
                 // return 1;
 
-            std::string outP = outpath + "/" + de->d_name + "/" + arr[i] + "/predict/";
+            std::string outP = outputImage + "/" + de->d_name + "/" + arr[i] + "/predict_pos/";
             
             if (checkMasks::loadMasks(path, outP, listImages, listName) == 0) continue;
+            
             if (listName.size() == 0){
                 std::cout << path << " is empty!";
+                continue;
             }
             
             std::pair<int, int> SMasks[listName.size()];
@@ -118,6 +120,7 @@ int loadMasks(std::string inpath, std::string outpath){
             std::cout << "Max Size : " << SMasks[0].first << "\n";
             std::vector<std::string> outName;
             // writeImage(listName[SMasks[0].second], outP, path);
+            
             outName.push_back(listName[SMasks[0].second]);
             for (int i = 1; i < listName.size(); i++){
                 if (SMasks[i].first >= sMin)  outName.push_back(listName[SMasks[i].second]);
@@ -146,30 +149,32 @@ int loadMasks(std::string inpath, std::string outpath){
                     l = m;
                     break;
                 }
+                if (outNameInt[m].first < idmax.first) l = m;
                 if (outNameInt[m].first > idmax.first) r = m;
                     else r = m;
             }
-            int ansl = l, ansr = r;
+            int ansl = l, ansr = l;
             r = l + 1;
             --l;
-            // writeImage(outName[idmax.second], outP, path);
-            // std::cout << "size : " << outName.size() << "\n";
+            writeImage(outName[idmax.second], outP, path);
+            std::cout << "idmax : " << idmax.first << "\n";
             
             while (true)
             {
                 // std::cout << "l : " << l << " " << " r : " << r << "\n";
                 if (l >= 0) 
-                    if (outNameInt[l].first + 5 > outNameInt[l+1].first)  ansl = l; // writeImage(outName[outNameInt[l].second], outP, path);
+                    if (outNameInt[l].first + 5 > outNameInt[l+1].first)  {ansl = l; writeImage(outName[outNameInt[l].second], outP, path);}
                         else  l = -1;
                 if (r < outName.size())
-                    if (outNameInt[r].first - 5 < outNameInt[r-1].first) ansr = r; // writeImage(outName[outNameInt[r].second], outP, path);
+                    if (outNameInt[r].first - 5 < outNameInt[r-1].first) {ansr = r;  writeImage(outName[outNameInt[r].second], outP, path);}
                         else r = outName.size();
                 if (l < 0 && r >= outName.size()) break;
                 --l; ++r;
             }
-            std::cout << ansl << " " << ansr << "\n";
+            // std::cout << "hi\n";
+            // std::cout << ansl << " " << ansr << "\n";
             std::ofstream outfile;
-            outfile.open("../test.txt", std::ios_base::app);
+            outfile.open(outpath.c_str(), std::ios_base::app);
             
             outfile << de->d_name << " " << arr[i] << " " << outNameInt[ansl].first << " " << outNameInt[ansr].first << "\n";
             std::cout << de->d_name << " " << arr[i] << " " << outNameInt[ansl].first << " " << outNameInt[ansr].first << "\n";
@@ -187,12 +192,13 @@ int loadMasks(std::string inpath, std::string outpath){
 int main(int argc, char const *argv[])
 {
     std::string input = argv[1];
-    std::string output = argv[2];
+    std::string outputImage = argv[2];
+    std::string output = argv[3];
     std::ofstream outfile;
-        outfile.open("../test.txt", std::ios::out | std::ios::trunc);
+        outfile.open(output.c_str(), std::ios::out | std::ios::trunc);
         // outfile.clear();
     outfile.close();
-    loadMasks(input, output);
+    loadMasks(input, output, outputImage);
     
     return 0;
 }

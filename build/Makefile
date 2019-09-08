@@ -110,19 +110,6 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named checkMasks
-
-# Build rule for target.
-checkMasks: cmake_check_build_system
-	$(MAKE) -f CMakeFiles\Makefile2 checkMasks
-.PHONY : checkMasks
-
-# fast build rule for target.
-checkMasks/fast:
-	$(MAKE) -f CMakeFiles\checkMasks.dir\build.make CMakeFiles/checkMasks.dir/build
-.PHONY : checkMasks/fast
-
-#=============================================================================
 # Target rules for targets named maxMasks
 
 # Build rule for target.
@@ -134,33 +121,6 @@ maxMasks: cmake_check_build_system
 maxMasks/fast:
 	$(MAKE) -f CMakeFiles\maxMasks.dir\build.make CMakeFiles/maxMasks.dir/build
 .PHONY : maxMasks/fast
-
-checkMasks.obj: checkMasks.cpp.obj
-
-.PHONY : checkMasks.obj
-
-# target to build an object file
-checkMasks.cpp.obj:
-	$(MAKE) -f CMakeFiles\checkMasks.dir\build.make CMakeFiles/checkMasks.dir/checkMasks.cpp.obj
-.PHONY : checkMasks.cpp.obj
-
-checkMasks.i: checkMasks.cpp.i
-
-.PHONY : checkMasks.i
-
-# target to preprocess a source file
-checkMasks.cpp.i:
-	$(MAKE) -f CMakeFiles\checkMasks.dir\build.make CMakeFiles/checkMasks.dir/checkMasks.cpp.i
-.PHONY : checkMasks.cpp.i
-
-checkMasks.s: checkMasks.cpp.s
-
-.PHONY : checkMasks.s
-
-# target to generate assembly for a file
-checkMasks.cpp.s:
-	$(MAKE) -f CMakeFiles\checkMasks.dir\build.make CMakeFiles/checkMasks.dir/checkMasks.cpp.s
-.PHONY : checkMasks.cpp.s
 
 maxMasks.obj: maxMasks.cpp.obj
 
@@ -195,13 +155,9 @@ help:
 	@echo ... all (the default if no target is provided)
 	@echo ... clean
 	@echo ... depend
-	@echo ... edit_cache
-	@echo ... checkMasks
 	@echo ... maxMasks
+	@echo ... edit_cache
 	@echo ... rebuild_cache
-	@echo ... checkMasks.obj
-	@echo ... checkMasks.i
-	@echo ... checkMasks.s
 	@echo ... maxMasks.obj
 	@echo ... maxMasks.i
 	@echo ... maxMasks.s

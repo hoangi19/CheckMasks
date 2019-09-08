@@ -22,8 +22,9 @@ public :
         
         q.push(x*rows + y);
         int *visited = new int[rows*cols];
-        memset(visited, 0, sizeof(visited));
-
+        // memset(visited, 0, sizeof(visited));
+        for (int i = 0; i < rows*cols; i++)
+            visited[i] = 0;
         masks[x*rows + y] = n;
 
         while (!q.empty())
@@ -73,9 +74,11 @@ public :
                     BFS(masksP, preImage, r, c, nPMask);
                     BFS(masksC, curImage, r, c, nCMask);
                     BFS(masksB, befImage, r, c, nBMask);
+                    // if (nBMask != 0) std::cout << r << " " << c << " " <<  nBMask << "\n";
+                    // std::cout << (int)curImage.at<uchar>(r, c) << "\n";
                 }
             }
-        
+        // std::cout << nCMask << "\n";
         int *SMasksP = new int[rows*cols];
         int *SMasksB = new int[rows*cols];
         int *SCMasks = new int[rows*cols];
@@ -130,15 +133,23 @@ public :
                             int sP = SMasksP[masksC[r*rows + c]];
                             if (masksB[r*rows + c] != idSBMax) { continue;}
                             if (masksP[r*rows + c] != idSPMax) { continue;}
-                            // std::cout << "s : " << s << " sB : " << sB << " sP : " << sP << "\n";
+                            // std::cout << "s : " << s << " sB : " << sB << " sP : " << sP << " ||| \n";
                             if (sB * 10.0 >= s*6.0 || sP * 10.0 >= s*6.0) {
                                 dd[masksC[r*rows+c]] = 1;
+                                // std::cout << r << " " << c << "  |||\n";
                                 continue;
                             }
                             // curImage.at<uchar>(r, c) = 0;
                         }
 
             }
+        // // DEBUG
+        //         cv::imshow("CUR", curImage);
+        //         cv::imshow("PER", preImage);
+        //         cv::imshow("BEF", befImage);
+        //         cv::waitKey(0);
+        //         // return 0;
+        //         // end DEBUG
         for (int r = 0; r < rows; ++r)
             for (int c = 0; c < cols; ++c)
                 if (dd[masksC[r*rows + c]] == 0) curImage.at<uchar>(r, c) = 0;
@@ -155,6 +166,11 @@ public :
     }
 
     static int checkImage(cv::Mat image){
+    // // DEBUG
+    //     cv::imshow("image", image);
+    //     cv::waitKey(0);
+    //     return 0;
+    // // end DEBUG
         for (int r = 0; r < image.rows-1; r++)
             for (int c = 0; c < image.cols-1; c++)
                 if ((int)image.at<uchar>(r, c) != 0) return 0;
@@ -170,11 +186,23 @@ public :
         {
             std::string deName = de->d_name;
             if (deName == "." || deName == "..") continue;
-            listName.push_back(deName);
+            cv::Mat image = cv::imread(path + deName, 0);
+            if (checkImage(image) == 0) listName.push_back(deName);
+            
         }
         delete(de);
         closedir(dr);
         return 0;
+    }
+
+    static bool checkIndex(std::string p, std::string q){
+        p.erase(p.size() - 4, 4);
+        q.erase(q.size() - 4, 4);
+
+        int ip = std::stoi(p);
+        int iq = std::stoi(q);
+        // std::cout << ip << " " << iq << " id\n";
+        return ip - iq == 1;
     }
 
     static int loadMasks(std::string inpath, std::string outpath, std::vector<cv::Mat> &listImages, std::vector<std::string> &listNameReturn){
@@ -205,91 +233,110 @@ public :
             //     system(cmd.c_str());
             // }
             std::cout << inpath << "\n";
-            cv::Mat firstImage = cv::imread(inpath + listName[0], 0);
+            // std::cout << listName.size() << "\n";
+            if (listName.empty()) return 0;
+            // cv::Mat firstImage = cv::imread(inpath + listName[0], 0);
+            
             bool check = true;
-            while(checkImage(firstImage) && !listName.empty()){
-                listName.erase(listName.begin());
-                firstImage = cv::imread(inpath + listName[0], 0);
-            }
-            if (!listName.empty()) checkMask(firstImage, firstImage, cv::imread(inpath + listName[1], 0));
-            
-            if(checkImage(firstImage)){
-                listName[0] = listName[1];
-                check = false;
-            }
-            
-            bool flag = true;
-            if (check){
-                // flag = cv::imwrite(outP + listName[0], firstImage);
-                listImages.push_back(firstImage);
-                listNameReturn.push_back(listName[0]);
-                // if (flag) std::cout << "Done! :";
-                //     else std::cout << "Error! :";
-                // std::cout << outP + listName[0] << "\n";
-            }
-            // std::cout << inpath + listName[0] << "\n";
-            for (int i = 1; i < listName.size()-1; i++){
-                cv::Mat preImage = cv::imread(inpath + listName[i-1], 0);
-                cv::Mat curImage = cv::imread(inpath + listName[i], 0);
-                cv::Mat befImage = cv::imread(inpath + listName[i+1], 0);
-                
-                // // DEBUG
-                // cv::imshow(listName[i], curImage);
-                // cv::waitKey(0);
-                // return 0;
-                // // end DEBUG
-                if (checkImage(curImage)){
-                    listName[i] = listName[i-1];
-                    continue;
-                }
-                checkMask(preImage, curImage, befImage);
-                
-                if (checkImage(curImage)){
-                    listName[i] = listName[i-1];
-                    continue;
-                }
-                // bool flag = cv::imwrite(outP + listName[i], curImage);
-                bool flag = true;
-                listImages.push_back(curImage);
-                listNameReturn.push_back(listName[i]);
-                // if (flag) std::cout << "Done! :";
-                //     else std::cout << "Error! :";
-                // std::cout << outP + listName[i] << "\n";
-                
-            }
-
-            cv::Mat lastImage = cv::imread(inpath + listName[listName.size()-1], 0);
-            // std::cout << inpath + listName[listName.size()-1];
-
-            // listNameReturn = listName;
-            // listNameReturn.push_back(listName[listName.size()-1]);
-            if (checkImage(lastImage)) return 1;
-            
-            checkMask(listImages[listImages.size() - 1], lastImage, lastImage);
-                //             // DEBUG
-                // cv::imshow(listName[listName.size()-1], lastImage);
-                // cv::waitKey(0);
-                // // return 0;
-                // // end DEBUG
-            if (checkImage(lastImage)) return 1;
-            
-            std::cout << "hi\n";
-            // flag = cv::imwrite(outP + listName[listName.size()-1], lastImage);
-            flag = true;
-            
-            listNameReturn.push_back(listName[listName.size()-1]);
-            listImages.push_back(lastImage);
-            // listNameReturn = listName;
-            // if (flag) std::cout << "Done! :";
-            //     else std::cout << "Error! :";
-            // std::cout << outP + listName[listName.size()-1] << "\n";
-
+            // while(checkImage(firstImage) && !listName.empty()){
+            //     listName.erase(listName.begin());
+            //     firstImage = cv::imread(inpath + listName[0], 0);
             // }
-        // }
-        // delete(de);
-        // closedir(dip);
+            // if (!listName.empty()) checkMask(firstImage, firstImage, cv::imread(inpath + listName[1], 0));
             
-        
+            // if(checkImage(firstImage)){
+            //     listName[0] = listName[1];
+            //     check = false;
+            // }
+            
+            // bool flag = true;
+            // if (check){
+            //     // flag = cv::imwrite(outP + listName[0], firstImage);
+            //     listImages.push_back(firstImage);
+            //     listNameReturn.push_back(listName[0]);
+            //     // if (flag) std::cout << "Done! :";
+            //     //     else std::cout << "Error! :";
+            //     // std::cout << outP + listName[0] << "\n";
+            // }
+            // std::cout << inpath + listName[0] << "\n";
+            
+            std::vector<std::string> listNameCop;
+            listNameCop.push_back(listName[0]);
+            for (int id = 1; id < listName.size(); id++){
+                if (checkIndex(listName[id], listName[id-1])) {
+                    listNameCop.push_back(listName[id]);
+                    if (id < listName.size() - 1) continue;
+                }
+                // std::cout << listNameCop[0] << " ";
+                if (listNameCop.empty()) continue;
+                for (int i = 1; i < listNameCop.size()-1; i++){
+                    cv::Mat preImage = cv::imread(inpath + listNameCop[i-1], 0);
+                    cv::Mat curImage = cv::imread(inpath + listNameCop[i], 0);
+                    cv::Mat befImage = cv::imread(inpath + listNameCop[i+1], 0);
+                    
+                    // // DEBUG
+                    // cv::imshow(listName[i], curImage);
+                    // cv::imshow(listName[i-1], preImage);
+                    // cv::imshow(listName[i+1], befImage);
+                    // cv::waitKey(0);
+                    // return 0;
+                    // // end DEBUG
+                    // if (checkImage(curImage)){
+                    //     listNameCop[i] = listNameCop[i-1];
+                    //     // std::cout << "run 247\n";
+                    //     continue;
+                    // }
+                    checkMask(preImage, curImage, befImage);
+                    
+                    if (checkImage(curImage)){
+                        listNameCop[i] = listNameCop[i-1];
+                        // std::cout << "run 254\n";
+                        continue;
+                    }
+                    // bool flag = cv::imwrite(outP + listName[i], curImage);
+                    bool flag = true;
+                    listImages.push_back(curImage);
+                    listNameReturn.push_back(listName[i]);
+                    // if (flag) std::cout << "Done! :";
+                    //     else std::cout << "Error! :";
+                    // std::cout << outP + listName[i] << "\n";
+                    
+                }
+                listNameCop.clear();
+                listNameCop.push_back(listName[id]);
+                // std::cout << "hi\n";
+                // cv::Mat lastImage = cv::imread(inpath + listName[listName.size()-1], 0);
+                // // std::cout << inpath + listName[listName.size()-1];
+
+                // // listNameReturn = listName;
+                // // listNameReturn.push_back(listName[listName.size()-1]);
+                // if (checkImage(lastImage)) return 1;
+                
+                // checkMask(listImages[listImages.size() - 1], lastImage, lastImage);
+                //     //             // DEBUG
+                //     // cv::imshow(listName[listName.size()-1], lastImage);
+                //     // cv::waitKey(0);
+                //     // // return 0;
+                //     // // end DEBUG
+                // if (checkImage(lastImage)) return 1;
+                // 
+                
+                // // flag = cv::imwrite(outP + listName[listName.size()-1], lastImage);
+                // flag = true;
+                
+                // listNameReturn.push_back(listName[listName.size()-1]);
+                // listImages.push_back(lastImage);
+                // listNameReturn = listName;
+                // if (flag) std::cout << "Done! :";
+                //     else std::cout << "Error! :";
+                // std::cout << outP + listName[listName.size()-1] << "\n";
+
+                // }
+            // }
+            // delete(de);
+            // closedir(dip);
+            // std::cout << "size : " << listNameReturn.size() << "\n";
+            }
         return 1;
     }
 
